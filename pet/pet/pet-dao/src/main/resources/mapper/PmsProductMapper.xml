@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.java.mapper.PmsProductMapper"><!--根节点：理解成当前xml文件是UserMapper的实现类-->
+    <resultMap id="productProductMapperMap" type="com.java.vo.PmsProductCategoryVo">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="level" column="level"></result>
+        <result property="showStatus" column="show_status"></result>
+        <result property="icon" column="icon"></result>
+
+        <collection property="secProductCategoryList" ofType="com.java.vo.PmsSonProductCategoryVo">
+            <id property="secId" column="secId"></id>
+            <result property="secName" column="secName"></result>
+            <result property="secLevel" column="secLevel"></result>
+            <result property="secShowStatus" column="secShowStatus"></result>
+            <result property="secIcon" column="secIcon"></result>
+        </collection>
+    </resultMap>
+
+    <resultMap id="supMap" type="com.java.vo.PmsSpuVo">
+        <id column="id" property="id"></id>
+        <result column="brand_id" property="brandId"></result>
+        <result column="cid1" property="cid1"></result>
+        <result column="cid2" property="cid2"></result>
+        <result column="name" property="name"></result>
+        <result column="sub_title" property="subTitle"></result>
+        <result column="sale" property="sale"></result>
+        <result column="comment_amount" property="commentAmount"></result>
+        <result column="comment_total_score" property="commentTotalScore"></result>
+        <result column="product_specification" property="productSpecification"></result>
+        <result column="default_price" property="defaultPrice"></result>
+        <result column="default_pic_url" property="defaultPicUrl"></result>
+        <result column="publish_status" property="publishStatus"></result>
+        <result column="verify_status" property="verifyStatus"></result>
+        <result column="valid" property="valid"></result>
+       <collection property="productDetailPicList" ofType="com.java.vo.PmsProductDetailPicVo">
+           <id column="id" property="picId"></id>
+           <result column="pic_url" property="picUrl"></result>
+       </collection>
+    </resultMap>
+
+    <select id="getSpuBySpuId" resultMap="supMap">
+        select t1.id,t1.brand_id,t1.cid1,t1.cid2,t1.name,t1.sub_title,t1.sale,
+        t1.comment_amount,t1.comment_total_score,t1.product_specification,t1.default_price,t1.default_pic_url,
+        t1.publish_status,t1.verify_status,t1.valid,
+        t2.id,t2.pic_url from pms_spu t1,pms_product_detail_pic t2
+        where t1.id=t2.spu_id and t1.id=#{spuId};
+    </select>
+
+
+    <resultMap id="skuMap" type="com.java.vo.PmsSkuVo">
+        <id column="id" property="id"></id>
+        <result column="spu_id" property="spuId"></result>
+        <result column="title" property="title"></result>
+        <result column="price" property="price"></result>
+        <result column="unit" property="unit"></result>
+        <result column="stock" property="stock"></result>
+        <result column="sale" property="sale"></result>
+        <result column="indexes" property="indexes"></result>
+        <result column="product_sku_specification" property="productSkuSpecification"></result>
+        <result column="is_default" property="isDefault"></result>
+        <result column="valid" property="valid"></result>
+        <collection property="skuPicList" ofType="com.java.vo.PmsSkuPicVo">
+            <id column="id" property="id"></id>
+            <result column="sku_id" property="skuId"></result>
+            <result column="pic_url" property="picUrl"></result>
+            <result column="is_default" property="isDefault"></result>
+        </collection>
+
+    </resultMap>
+    <select id="getSkuBySpuId" resultMap="skuMap">
+        SELECT t1.id,t1.spu_id,t1.title,t1.price,t1.unit,t1.stock,
+       t1.sale,t1.indexes,t1.product_sku_specification,t1.is_default,t1.valid,
+        t2.id,t2.sku_id,t2.pic_url,t2.is_default
+        FROM pms_sku t1,pms_sku_pic t2 WHERE t1.id=t2.sku_id AND t1.spu_id=#{spuId}
+
+    </select>
+    <select id="getAllProductCategoryList" resultMap="productProductMapperMap">
+        select t1.id,t1.name,t1.level,t1.show_status,t1.icon,
+               t2.id secId,t2.name secName,t2.level secLevel,t2.show_status secShowStatus,t2.icon secIcon
+               from
+               pms_product_category t1,pms_product_category t2
+               where t1.id=t2.parent_id ;
+    </select>
+
+
+    <select id="getCategoryNameById"  resultType="java.lang.String" parameterType="java.util.List">
+        select name from pms_product_category where id in
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+
+    </select>
+
+    <select id="getSkuBySkuId" resultType="com.java.po.PmsSku">
+        select * from pms_sku where id=#{skuId};
+
+    </select>
+
+
+
+
+</mapper>

@@ -1,0 +1,29 @@
+aliyun:
+  sms:
+    accessKeyId: LTAI5tQXmjXUMfQafqmUwHDy
+    accessKeySecret: 5QpEznUThvxPDoWcOs4yXCoxaEb9Nb
+    regionId: cn-hangzhou
+    endpoint: dysmsapi.aliyuncs.com
+    signName: 宠物有家
+    templateCode: SMS_460720809
+
+spring:
+  redis:
+    port: 6379
+    database: 15
+    host: localhost
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1ms
+        min-idle: 0
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/pet
+    username: root
+    password: root
+mybatis:
+  mapper-locations: classpath:/mapper/*xml
+  configuration:
+    map-underscore-to-camel-case: true
